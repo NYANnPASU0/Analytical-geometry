@@ -13,7 +13,7 @@ Point cross_product(Point a, Point b);
 double dot_product(Point a, Point b);
 
 void is_same_side(double A, double B, double C, double x1, double y1, double x2, double y2); //1
-void intersection(double ax, double ay, double bx, double by, double cx, double cy, double dx, double dy); //2
+void intersection_vector(double ax, double ay, double bx, double by, double cx, double cy, double dx, double dy); //2
 int is_point_inside_angle(Point A, Point B, Point C, Point D); //3
 void is_same_space(double A, double B, double C, double D, double x1, double y1, double z1, double x2, double y2, double z2);//4
 
@@ -76,9 +76,100 @@ void is_same_side(double A, double B, double C, double x1, double y1, double x2,
 }
 
 //2
-void intersection(double ax, double ay, double bx, double by, double cx, double cy, double dx, double dy)
-{
-
+void intersection_vector(double ax, double ay, double bx, double by,
+                         double cx, double cy, double dx, double dy)
+{   
+    double cross1 = (bx - ax) * (cy - ay) - (by - ay) * (cx - ax);
+    double cross2 = (bx - ax) * (dy - ay) - (by - ay) * (dx - ax);
+    
+    if (fabs(cross1) > DBL_EPSILON || fabs(cross2) > DBL_EPSILON) {
+        printf("Точки не лежат на одной прямой\n");
+        return;
+    }
+    
+    //AB - напр.вектор
+    double vx = bx - ax;
+    double vy = by - ay;
+    //CD - напр.вектор
+    double wx = dx - cx;
+    double wy = dy - cy;
+    
+    //вырожденность
+    if (fabs(vx) < DBL_EPSILON && fabs(vy) < DBL_EPSILON) {
+        printf("Луч AB вырожден в точку A\n");
+        double posA = (ax - cx)*wx + (ay - cy)*wy;
+        if (posA >= -DBL_EPSILON) {
+            printf("Точка A принадлежит лучу CD - лучи пересекаются\n");
+        } else {
+            printf("Лучи не пересекаются\n");
+        }
+        return;
+    }
+    
+    if (fabs(wx) < DBL_EPSILON && fabs(wy) < DBL_EPSILON) {
+        printf("Луч CD вырожден в точку C\n");
+        double posC = (cx - ax)*vx + (cy - ay)*vy;
+        if (posC >= -DBL_EPSILON) {
+            printf("Точка C принадлежит лучу AB → лучи пересекаются\n");
+        } else {
+            printf("Лучи не пересекаются\n");
+        }
+        return;
+    }
+    
+    // сонаправленность лучей
+    double dot = vx*wx + vy*wy;
+    //C относительно луча AB
+    double posC = (cx - ax)*vx + (cy - ay)*vy;
+    //A относительно луча CD
+    double posA = (ax - cx)*wx + (ay - cy)*wy;
+    
+    printf("Направление AB: (%.2f, %.2f)\n", vx, vy);
+    printf("Направление CD: (%.2f, %.2f)\n", wx, wy);
+    printf("Скалярное произведение направлений: %.2f\n", dot);
+    printf("Положение C относительно AB: %.2f\n", posC);
+    printf("Положение A относительно CD: %.2f\n", posA);
+    
+    if (dot > DBL_EPSILON) {
+        printf("Лучи сонаправлены\n");
+        if (posC >= -DBL_EPSILON || posA >= -DBL_EPSILON) {
+            printf("Лучи пересекаются\n");
+            if (posC >= -DBL_EPSILON && posA >= -DBL_EPSILON) {
+                // Оба начала лежат на противоположных лучах
+                // Общая часть начинается от более удалённой точки
+                if (posC > posA) {
+                    printf("Общая часть: луч от C в направлении AB\n");
+                } else {
+                    printf("Общая часть: луч от A в направлении CD\n");
+                }
+            } else if (posC >= -DBL_EPSILON) {
+                printf("Общая часть: луч от C в направлении AB\n");
+            } else {
+                printf("Общая часть: луч от A в направлении CD\n");
+            }
+        } else {
+            printf("Лучи не пересекаются (разбегаются в разные стороны)\n");
+        }
+    }
+    else if (dot < -DBL_EPSILON) {
+        printf("Лучи противоположно направлены\n");
+        
+        if (posC >= -DBL_EPSILON && posA >= -DBL_EPSILON) {
+            printf("Лучи пересекаются (смотрят друг на друга)\n");
+            printf("Общая часть: отрезок [A, C]\n");
+        }
+        else if (posC >= -DBL_EPSILON) {
+            printf("Лучи пересекаются (C лежит на AB)\n");
+            printf("Общая часть: луч от C в направлении CD\n");
+        }
+        else if (posA >= -DBL_EPSILON) {
+            printf("Лучи пересекаются (A лежит на CD)\n");
+            printf("Общая часть: луч от A в направлении AB\n");
+        }
+        else {
+            printf("Лучи не пересекаются\n");
+        }
+    }
 }
 
 
