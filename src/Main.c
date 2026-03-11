@@ -52,7 +52,7 @@ void is_same_side(double A, double B, double C, double x1, double y1, double x2,
     
     if (on_line1 && on_line2) 
     {
-        printf("Точки A и B лежат на одной прямой");
+        printf("Точки A и B лежат на одной прямой\n");
     }
     else if (on_line1) 
     {
@@ -110,7 +110,7 @@ void intersection_vector(double ax, double ay, double bx, double by,
         printf("Луч CD вырожден в точку C\n");
         double posC = (cx - ax)*vx + (cy - ay)*vy;
         if (posC >= -DBL_EPSILON) {
-            printf("Точка C принадлежит лучу AB → лучи пересекаются\n");
+            printf("Точка C принадлежит лучу AB - лучи пересекаются\n");
         } else {
             printf("Лучи не пересекаются\n");
         }
@@ -123,12 +123,6 @@ void intersection_vector(double ax, double ay, double bx, double by,
     double posC = (cx - ax)*vx + (cy - ay)*vy;
     //A относительно луча CD
     double posA = (ax - cx)*wx + (ay - cy)*wy;
-    
-    printf("Направление AB: (%.2f, %.2f)\n", vx, vy);
-    printf("Направление CD: (%.2f, %.2f)\n", wx, wy);
-    printf("Скалярное произведение направлений: %.2f\n", dot);
-    printf("Положение C относительно AB: %.2f\n", posC);
-    printf("Положение A относительно CD: %.2f\n", posA);
     
     if (dot > DBL_EPSILON) {
         printf("Лучи сонаправлены\n");
@@ -148,14 +142,14 @@ void intersection_vector(double ax, double ay, double bx, double by,
                 printf("Общая часть: луч от A в направлении CD\n");
             }
         } else {
-            printf("Лучи не пересекаются (разбегаются в разные стороны)\n");
+            printf("Лучи не пересекаются\n");
         }
     }
     else if (dot < -DBL_EPSILON) {
         printf("Лучи противоположно направлены\n");
         
         if (posC >= -DBL_EPSILON && posA >= -DBL_EPSILON) {
-            printf("Лучи пересекаются (смотрят друг на друга)\n");
+            printf("Лучи пересекаются\n");
             printf("Общая часть: отрезок [A, C]\n");
         }
         else if (posC >= -DBL_EPSILON) {
@@ -250,11 +244,12 @@ int main()
 {    
     SetConsoleOutputCP(65001);
     int num;
+    
+    printf("Введите номер задачи (1-4): ");
     scanf("%d", &num);
+    
     switch (num)
     {
-        //Определить положение двух точек относительно прямой
-        //по одну сторону от прямой, по разные, на прямой. Прямая задана своими коэффициентами
         case 1: 
         {
             double A, B, C, x1, y1, x2, y2;
@@ -265,29 +260,63 @@ int main()
             printf("Введите координаты точки A на плоскости (x1, y1)\n");
             scanf("%lf %lf", &x1, &y1);
             
-            printf("Введите координаты точки B на плоскости  (x2, y2)\n");
+            printf("Введите координаты точки B на плоскости (x2, y2)\n");
             scanf("%lf %lf", &x2, &y2);
             
             is_same_side(A, B, C, x1, y1, x2, y2);
+            
+            //по одну сторону
+            printf("\nПрямая: 2x + 3y - 6 = 0\n");
+            printf("Точка A(1, 1), Точка B(0, 0)\n");
+            is_same_side(2, 3, -6, 1, 1, 2, 2);
+            
+            //по разные стороны
+            printf("\nПрямая: x + y - 4 = 0\n");
+            printf("Точка A(1, 1), Точка B(5, 5)\n");
+            is_same_side(1, 1, -4, 1, 1, 5, 5);
+            
+            // точка A на прямой
+            printf("\nПрямая: 3x - 2y + 1 = 0\n");
+            printf("Точка A(1, 2), Точка B(3, 4)\n");
+            is_same_side(3, -2, 1, 1, 2, 3, 4);
+            
+            //обе точки на прямой
+            printf("\nПрямая: x - 2y + 3 = 0\n");
+            printf("Точка A(1, 2), Точка B(3, 3)\n");
+            is_same_side(1, -2, 3, 1, 2, 3, 3);
+            
             break;
         }
         case 2:
         {
             double ax, ay, bx, by, cx, cy, dx, dy;
             
-            printf("Enter the coordinates of the A point on the line (ax, ay)\n");
+            printf("Введите координаты точки A (ax, ay)\n");
             scanf("%lf %lf", &ax, &ay);
             
-            printf("Enter the coordinates of the B point on the line (bx, by)\n");
+            printf("Введите координаты точки B (bx, by)\n");
             scanf("%lf %lf", &bx, &by);
             
-            printf("Enter the coordinates of the C point on the line (cx, cy)\n");
+            printf("Введите координаты точки C (cx, cy)\n");
             scanf("%lf %lf", &cx, &cy);
             
-            printf("Enter the coordinates of the D point on the line (dx, dy)\n");
+            printf("Введите координаты точки D (dx, dy)\n");
             scanf("%lf %lf", &dx, &dy);
             
-            //--------------
+            intersection_vector(ax, ay, bx, by, cx, cy, dx, dy);
+            
+            // лучи пересекаются
+            printf("\nA(0,0), B(2,0), C(1,0), D(3,0)\n");
+            intersection_vector(0, 0, 2, 0, 1, 0, 3, 0);
+            
+            //лучи не пересекаются (противоположно направлены)
+            printf("\nA(0,0), B(-2,0), C(3,0), D(5,0)\n");
+            intersection_vector(0, 0, -2, 0, 3, 0, 5, 0);
+            
+            //лучи пересекаются (противоположно направлены)
+            printf("\nA(0,0), B(2,0), C(1,0), D(-1,0)\n");
+            intersection_vector(0, 0, 2, 0, 1, 0, -1, 0);
+            
             break;
         }
         
@@ -306,15 +335,28 @@ int main()
             printf("Введите координаты точки D в пространстве (x4, y4, z4)\n");
             scanf("%lf %lf %lf", &D.x, &D.y, &D.z);
 
-            if(is_point_inside_angle(A, B, C, D) == 1) printf("Точка D лежит внутри угла ABC");
-
+            if(is_point_inside_angle(A, B, C, D) == 1) printf("Точка D лежит внутри угла ABC\n");
+            
+            //точка внутри угла
+            Point A1 = {1, 0, 0};
+            Point B1 = {0, 0, 0};
+            Point C1 = {0, 1, 0};
+            Point D1 = {0.3, 0.3, 0};
+            printf("\nA(1,0,0), B(0,0,0), C(0,1,0), D(0.3,0.3,0)\n");
+            if(is_point_inside_angle(A1, B1, C1, D1) == 1) printf("Точка D лежит внутри угла ABC\n");
+            
+            //точка вне угла
+            Point A2 = {1, 0, 0};
+            Point B2 = {0, 0, 0};
+            Point C2 = {0, 1, 0};
+            Point D2 = {-0.3, -0.3, 0};
+            printf("\nA(1,0,0), B(0,0,0), C(0,1,0), D(-0.3,-0.3,0)\n");
+            if(is_point_inside_angle(A2, B2, C2, D2) == 1) printf("Точка D лежит внутри угла ABC\n");
+            
             break;
-        }
-        
+        } 
         case 4:
         {
-            //Определить положение двух точек относительно плоскости
-            //по одну сторону от плоскости, по разные, на плоскости.  Плоскость задана своими коэффициентами.
             double A, B, C, D, x1, y1, z1, x2, y2, z2;
             
             printf("Введите значения коэффициентов плоскости A, B, C, D (Ax + By + Cz + D = 0)\n");
@@ -327,10 +369,31 @@ int main()
             scanf("%lf %lf %lf", &x2, &y2, &z2);
             
             is_same_space(A, B, C, D, x1, y1, z1, x2, y2, z2);
+            
+            //точки по одну сторону от плоскости
+            printf("\nПлоскость: x + y + z - 3 = 0\n");
+            printf("Точка A(0,0,0), Точка B(1,1,0)\n");
+            is_same_space(1, 1, 1, -3, 0, 0, 0, 1, 1, 0);
+            
+            //точки по разные стороны от плоскости
+            printf("\nПлоскость: x + y + z - 3 = 0\n");
+            printf("Точка A(0,0,0), Точка B(2,2,0)\n");
+            is_same_space(1, 1, 1, -3, 0, 0, 0, 2, 2, 0);
+            
+            //точка A на плоскости
+            printf("\nПлоскость: 2x + 2y + 2z - 6 = 0\n");
+            printf("Точка A(1,1,1), Точка B(0,0,0)\n");
+            is_same_space(2, 2, 2, -6, 1, 1, 1, 0, 0, 0);
+            
+            //обе точки на плоскости
+            printf("\nПлоскость: x + y + z - 3 = 0\n");
+            printf("Точка A(1,1,1), Точка B(2,1,0)\n");
+            is_same_space(1, 1, 1, -3, 1, 1, 1, 2, 1, 0);
+            
             break;
         }
         default:
-            printf("Invalid task number\n");
+            printf("Неправильный номер\n");
     }
     return 0;
 }
