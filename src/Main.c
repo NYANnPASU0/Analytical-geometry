@@ -128,38 +128,22 @@ void intersection_vector(double ax, double ay, double bx, double by,
         printf("Лучи сонаправлены\n");
         if (posC >= -DBL_EPSILON || posA >= -DBL_EPSILON) {
             printf("Лучи пересекаются\n");
-            if (posC >= -DBL_EPSILON && posA >= -DBL_EPSILON) {
-                // Оба начала лежат на противоположных лучах
-                // Общая часть начинается от более удалённой точки
-                if (posC > posA) {
-                    printf("Общая часть: луч от C в направлении AB\n");
-                } else {
-                    printf("Общая часть: луч от A в направлении CD\n");
-                }
-            } else if (posC >= -DBL_EPSILON) {
-                printf("Общая часть: луч от C в направлении AB\n");
-            } else {
-                printf("Общая часть: луч от A в направлении CD\n");
-            }
-        } else {
+            if (posC >= posA)
+                printf("Общая часть начинается от C\n");
+            else
+                printf("Общая часть начинается от A\n");
+        } else
             printf("Лучи не пересекаются\n");
-        }
     }
     else if (dot < -DBL_EPSILON) {
         printf("Лучи противоположно направлены\n");
         
-        if (posC >= -DBL_EPSILON && posA >= -DBL_EPSILON) {
-            printf("Лучи пересекаются\n");
-            printf("Общая часть: отрезок [A, C]\n");
-        }
-        else if (posC >= -DBL_EPSILON) {
+        if (posC >= -DBL_EPSILON && posA >= -DBL_EPSILON)
+            printf("Лучи пересекаются (отрезок между A и C)\n");
+        else if (posC >= -DBL_EPSILON)
             printf("Лучи пересекаются (C лежит на AB)\n");
-            printf("Общая часть: луч от C в направлении CD\n");
-        }
-        else if (posA >= -DBL_EPSILON) {
+        else if (posA >= -DBL_EPSILON) 
             printf("Лучи пересекаются (A лежит на CD)\n");
-            printf("Общая часть: луч от A в направлении AB\n");
-        }
         else {
             printf("Лучи не пересекаются\n");
         }
