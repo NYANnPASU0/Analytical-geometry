@@ -87,37 +87,12 @@ void intersection_vector(double ax, double ay, double bx, double by,
         return;
     }
     
-    //AB - напр.вектор
     double vx = bx - ax;
     double vy = by - ay;
-    //CD - напр.вектор
+    
     double wx = dx - cx;
     double wy = dy - cy;
     
-    //вырожденность
-    if (fabs(vx) < DBL_EPSILON && fabs(vy) < DBL_EPSILON) {
-        printf("Луч AB вырожден в точку A\n");
-        double posA = (ax - cx)*wx + (ay - cy)*wy;
-        if (posA >= -DBL_EPSILON) {
-            printf("Точка A принадлежит лучу CD - лучи пересекаются\n");
-        } else {
-            printf("Лучи не пересекаются\n");
-        }
-        return;
-    }
-    
-    if (fabs(wx) < DBL_EPSILON && fabs(wy) < DBL_EPSILON) {
-        printf("Луч CD вырожден в точку C\n");
-        double posC = (cx - ax)*vx + (cy - ay)*vy;
-        if (posC >= -DBL_EPSILON) {
-            printf("Точка C принадлежит лучу AB - лучи пересекаются\n");
-        } else {
-            printf("Лучи не пересекаются\n");
-        }
-        return;
-    }
-    
-    // сонаправленность лучей
     double dot = vx*wx + vy*wy;
     //C относительно луча AB
     double posC = (cx - ax)*vx + (cy - ay)*vy;
