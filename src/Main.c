@@ -79,46 +79,27 @@ void is_same_side(double A, double B, double C, double x1, double y1, double x2,
 void intersection_vector(double ax, double ay, double bx, double by,
                          double cx, double cy, double dx, double dy)
 {   
-    double cross1 = (bx - ax) * (cy - ay) - (by - ay) * (cx - ax);
-    double cross2 = (bx - ax) * (dy - ay) - (by - ay) * (dx - ax);
-    
-    if (fabs(cross1) > DBL_EPSILON || fabs(cross2) > DBL_EPSILON) {
-        printf("Точки не лежат на одной прямой\n");
-        return;
-    }
-    
     double vx = bx - ax;
     double vy = by - ay;
     
     double wx = dx - cx;
     double wy = dy - cy;
     
-    double dot = vx*wx + vy*wy;
+    double sonapr = vx*wx + vy*wy;
     //C относительно луча AB
     double posC = (cx - ax)*vx + (cy - ay)*vy;
     //A относительно луча CD
     double posA = (ax - cx)*wx + (ay - cy)*wy;
     
-    if (dot > DBL_EPSILON) {
+    if (sonapr > DBL_EPSILON) {
         printf("Лучи сонаправлены\n");
-        if (posC >= -DBL_EPSILON || posA >= -DBL_EPSILON) {
-            printf("Лучи пересекаются\n");
-            if (posC >= posA)
-                printf("Общая часть начинается от C\n");
-            else
-                printf("Общая часть начинается от A\n");
-        } else
-            printf("Лучи не пересекаются\n");
+        printf("Лучи пересекаются\n");
     }
-    else if (dot < -DBL_EPSILON) {
+    else if (sonapr < -DBL_EPSILON) {
         printf("Лучи противоположно направлены\n");
         
         if (posC >= -DBL_EPSILON && posA >= -DBL_EPSILON)
             printf("Лучи пересекаются (отрезок между A и C)\n");
-        else if (posC >= -DBL_EPSILON)
-            printf("Лучи пересекаются (C лежит на AB)\n");
-        else if (posA >= -DBL_EPSILON) 
-            printf("Лучи пересекаются (A лежит на CD)\n");
         else {
             printf("Лучи не пересекаются\n");
         }
@@ -137,7 +118,7 @@ int is_point_inside_angle(Point A, Point B, Point C, Point D)
     Point v = cross_product(BA, BC);
     double is_compl = dot_product(v, BD);
 
-     if (fabs(is_compl) > DBL_EPSILON) {
+    if (fabs(is_compl) > DBL_EPSILON) {
         printf("Точки не лежат в одной плоскости, соответственно т.D лежит вне угла ABC");
         return -1;
     }
@@ -212,7 +193,7 @@ int main()
         case 1: 
         {
             double A, B, C, x1, y1, x2, y2;
-            
+
             printf("Введите значения коэффициентов прямой A, B, C (Ax + By + C = 0)\n");
             scanf("%lf %lf %lf", &A, &B, &C);
             
